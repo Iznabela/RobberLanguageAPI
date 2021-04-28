@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RobberLanguageAPI.Data;
 using RobberLanguageAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -12,15 +13,22 @@ namespace RobberLanguageAPI.Controllers
     [ApiController]
     public class TranslationController : ControllerBase
     {
-        private Translation Translation = new Translation();
+        private readonly RobberTranslationDbContext _context;
+
+        public TranslationController(RobberTranslationDbContext context)
+        {
+            _context = context;
+        }
+
+        private Translation translation = new Translation();
 
         [Route("CreateTranslation")]
         [HttpPost]
-        public ActionResult<Translation> PostTranslateSentence(string originalSentence)
+        public ActionResult<Translation> PostTranslateSentence(Translation obj)
         {
-            Translation.OriginalSentence = originalSentence;
-            Translation.TranslatedSentence = TranslateSentence(originalSentence);
-            return Translation;
+            translation.OriginalSentence = obj.OriginalSentence;
+            translation.TranslatedSentence = TranslateSentence(obj.OriginalSentence);
+            return translation;
         }
 
         private static string TranslateSentence(string sentence)

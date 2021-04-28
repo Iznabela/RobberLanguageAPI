@@ -11,6 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using RobberLanguageAPI.Models;
+using Microsoft.EntityFrameworkCore;
+using RobberLanguageAPI.Data;
 
 namespace RobberLanguageAPI
 {
@@ -32,6 +35,9 @@ namespace RobberLanguageAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RobberLanguageAPI", Version = "v1" });
             });
+
+            services.AddDbContext<RobberTranslationDbContext>(options => 
+                options.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Translations"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
