@@ -10,8 +10,8 @@ using RobberLanguageAPI.Data;
 namespace RobberLanguageAPI.Migrations
 {
     [DbContext(typeof(RobberTranslationDbContext))]
-    [Migration("20210426102446_init")]
-    partial class init
+    [Migration("20210429091925_ini")]
+    partial class ini
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

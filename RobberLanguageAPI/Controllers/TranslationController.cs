@@ -14,21 +14,34 @@ namespace RobberLanguageAPI.Controllers
     public class TranslationController : ControllerBase
     {
         private readonly RobberTranslationDbContext _context;
+        private readonly Translation translation = new Translation();
 
         public TranslationController(RobberTranslationDbContext context)
         {
             _context = context;
         }
 
-        private Translation translation = new Translation();
-
         [Route("CreateTranslation")]
         [HttpPost]
-        public ActionResult<Translation> PostTranslateSentence(Translation obj)
+        public async Task<IActionResult> PostTranslateSentence(Translation obj)
         {
+            if (String.IsNullOrWhiteSpace(obj.OriginalSentence))
+            {
+                return BadRequest();
+            }
             translation.OriginalSentence = obj.OriginalSentence;
             translation.TranslatedSentence = TranslateSentence(obj.OriginalSentence);
-            return translation;
+
+            try
+            {
+                await _context.Translations.AddAsync(translation);
+                await _context.SaveChangesAsync();
+                return new CreatedAtActionResult(nameof(PostTranslateSentence), "Translation", new { id = translation.Id }, translation);
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         private static string TranslateSentence(string sentence)
